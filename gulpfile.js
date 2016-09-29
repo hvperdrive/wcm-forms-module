@@ -1,0 +1,103 @@
+'use strict';
+
+var gulp = require('gulp');
+var zip = require('gulp-zip');
+var clean = require('gulp-clean');
+var runSequence = require('run-sequence');
+var replace = require('gulp-replace');
+var fs = require('fs');
+var packageConfig = JSON.parse(fs.readFileSync('./package.json'));
+
+// Copy all the necessary files into a temp folder
+gulp.task('prepareBuild', function() {
+    return gulp.src(['./app/**/*', './public/**/*', './package.json'], {base: '.'})
+        .pipe(gulp.dest('./dist/source/' + packageConfig.name + '_' + packageConfig.version));
+});
+// Zip the content of the temporary folder an put it in the dist/zip folder
+gulp.task('executeBuild', function() {
+    return gulp.src(['./dist/source/' + packageConfig.name + '_' + packageConfig.version + '/**/*'], {base: './dist/source/'})
+        .pipe(zip(packageConfig.name + '_' + packageConfig.version + '.zip'))
+        .pipe(gulp.dest('./dist/zip'));
+});
+// Remove the temporary source folder.
+gulp.task('finishBuild', function() {
+    return gulp.src('./dist/source', {read: false})
+        .pipe(clean());
+});
+
+// Utility function for bumping the version at the desired level in the package.json file.
+var bumpVersion = function bumpVersion(level) {
+    var versionArr = packageConfig.version.split('.');
+
+    versionArr[level] = '' + (parseInt(versionArr[level]) + 1);
+    packageConfig.version = versionArr.join('.');
+
+    fs.writeFileSync('./package.json', JSON.stringify(packageConfig, null, 4));
+
+    return packageConfig.version;
+};
+
+var bumpAngularModuleVersion = function bumpAngularModuleVersion(version) {
+    var reg = new RegExp('\'' + packageConfig.name + '_[0-9]{1,}\\.[0-9]{1,}\\.[0-9]{1,}', 'g');
+    // // Capture all angular module names with the name defined in the package.json file.
+    // var reg1 = new RegExp('angular.module\\(\'' + packageConfig.name + '_[0-9]{1,}\\.[0-9]{1,}\\.[0-9]{1}', 'g');
+    // // Capture all the angular module dependencies with the name defined in the package.json file.
+    // var reg2 = new RegExp('(?:(\\[|,)\\s*)\'' + packageConfig.name + '_[0-9]{1,}\\.[0-9]{1,}\\.[0-9]{1}(?:\\..*\'(,|\\s*\\]))', 'gm');
+    //
+    console.log(reg);
+    // console.log(reg1);
+    // console.log(reg2);
+
+    return gulp.src(['./public/app/**/*.js'])
+        .pipe(replace(reg, '\'' + packageConfig.name + '_' + version))
+        // .pipe(replace(reg1, 'angular.module(\'' + packageConfig.name + '_' + version))
+        // .pipe(replace(reg2, '\'' + packageConfig.name + '_' + version))
+        .pipe(gulp.dest('./public/app'));
+};
+
+// Bump patch version (x.x.[patch version])
+gulp.task('bumpPatchVersion', function() {
+    var newVersion = bumpVersion(2);
+    return bumpAngularModuleVersion(newVersion);
+});
+// Bump minor version(x.[minor version].x)
+gulp.task('bumpMinorVersion', function() {
+    var newVersion = bumpVersion(1);
+    return bumpAngularModuleVersion(newVersion);
+});
+// Bump major version([magjor version].x.x)
+gulp.task('bumpMajorVersion', function() {
+    var newVersion = bumpVersion(0);
+    return bumpAngularModuleVersion(newVersion);
+});
+
+// Bump the patch version and then build
+gulp.task('buildPatch', function() {
+    runSequence(
+        'bumpPatchVersion',
+        'build'
+    );
+});
+// Bump the minor version and then build
+gulp.task('buildMinor', function() {
+    runSequence(
+        'bumpMinorVersion',
+        'build'
+    );
+});
+// Bump the major version and then build
+gulp.task('buildMajor', function() {
+    runSequence(
+        'bumpMajorVersion',
+        'build'
+    );
+});
+
+// build the module
+gulp.task('build', function() {
+    runSequence(
+        'prepareBuild',
+        'executeBuild',
+        'finishBuild'
+    );
+});

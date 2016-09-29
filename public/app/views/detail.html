@@ -1,0 +1,70 @@
+<div class="content--inner">
+
+    <h1 class="c-page-title"><span translate>Edit</span> <i>{{itemData.data.name}}</i></h1>
+
+    <div ng-form name="resourceForms.itemForm">
+
+        <fieldset class="c-form__fieldset">
+            <legend class="c-form__fieldset__legend" translate>Meta information</legend>
+
+            <div class="form-section c-form__fieldset__content u-clear">
+                <field
+                    class="u-width-6-6"
+                    label="'Administration name' | translate"
+                    secondary-label="'The reference name in the WCM' | translate"
+                    name="formLabel"
+                    type="'text'"
+                    model="itemData.meta.label"
+                    field-data="resourceForms.metaForm"
+                    required="true"
+                    readonly="!_newInstance"
+                    placeholder="'Administration name' | translate">
+                </field>
+
+                <field
+                    label="'Description' | translate"
+                    class="u-width-6-6 fl"
+                    name="formDescription"
+                    type="'textarea'"
+                    model="itemData.meta.description"
+                    field-data="resourceForms.metaForm"
+                    required="true"
+                    placeholder="'Description' | translate">
+                </field>
+
+                <!-- Todo: rename checkbox to checkboxlist since it's a list -->
+                <field
+                    class="u-width-6-6 fl published-checkbox"
+                    name="gepubliceerd"
+                    type="'checkbox'"
+                    model="itemData.meta"
+                    options="publishedOptions">
+                </field>
+            </div>
+
+        </fieldset>
+
+        <fieldset class="c-form__fieldset">
+            <legend class="c-form__fieldset__legend" translate>Form</legend>
+
+            <div class="form-section c-form__fieldset__content u-clear">
+                <field
+                    label="'Form' | translate"
+                    class="u-width-3-6 fl"
+                    name="form"
+                    type="'select'"
+                    qlabel="name"
+                    track="lookupKey"
+                    options="data.externalForms"
+                    model="itemData.data.formReference"
+                    field-data="resourceForms.itemForm"
+                    required="true"
+                    placeholder="'Select a form' | translate">
+                </field>
+            </div>
+
+        </fieldset>
+
+    </div>
+
+</div>

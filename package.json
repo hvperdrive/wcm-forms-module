@@ -1,0 +1,45 @@
+{
+    "name": "forms",
+    "version": "0.0.1",
+    "description": "Form extension",
+    "main": "index.js",
+    "scripts": {
+        "fixtures": "node ./app/fixtures/fieldTypes.js",
+        "migrations": "echo \"Error: no migrations yet\" && exit 0"
+    },
+    "keywords": [
+        "test"
+    ],
+    "wcmModule": {
+        "frontend": {
+            "dirPath": "public/app/",
+            "assetsDirPath": "public/myAssets/",
+            "moduleConfig": {
+                "translationKey": "Forms",
+                "operationType": "forms",
+                "icon": "tasks",
+                "type": "content",
+                "navigationItem": true,
+                "authentication": {
+                    "requiresLogin": true
+                }
+            }
+        },
+        "backend": {
+            "dirPath": "app/",
+            "routeDirPaths": [
+                "app/routes/"
+            ]
+        }
+    },
+    "author": "Jeroen Valcke",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-clean": "^0.3.2",
+        "gulp-replace": "^0.5.4",
+        "gulp-zip": "^3.2.0",
+        "run-sequence": "^1.2.2"
+    }
+}
