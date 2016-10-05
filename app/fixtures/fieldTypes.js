@@ -8,6 +8,7 @@ require('rootpath')();
 var Q = require('q');
 var _ = require('lodash');
 var mongoose = require('mongoose');
+var packageConfig = require('../../package.json');
 // var config = require('config')();
 
 // Get mongo url parameter
@@ -24,6 +25,7 @@ var mongoUrl = process.argv[argvIndex];
 
 // Start mongoose connection
 mongoose.connect(mongoUrl);
+mongoose.Promise = require('q').Promise;
 
 var FieldTypeModel = require('app/models/fieldType');
 
@@ -37,27 +39,36 @@ var fieldTypes = {
         isQueryable: false,
         isTranslate: false,
         isMultiple: true,
-        operators: [],
-        uuid: 'db0dd755-83f1-4fc1-8bc6-2f2d3f279170'
+        source: 'external',
+        requestHookFile: 'app/modules/modules/' + packageConfig.name + '_' + packageConfig.version + '/app/helpers/requestHooks',
+        operators: []
     }
 };
 
 var createFieldType = function createFieldType(data) {
-    if(data === null) {
-        return Q.when(null);
-    }
-
     var d = Q.defer();
-
-    FieldTypeModel.create(data)
-        .then(
-            function onSuccess() {
-                d.resolve(true);
-            },
-            function onError(error) {
-                d.reject(error);
-            }
-        );
+    if(data.uuid) {
+        FieldTypeModel.update({uuid: data.uuid}, data)
+            .exec()
+            .then(
+                function onSuccess() {
+                    d.resolve(true);
+                },
+                function onError(error) {
+                    d.reject(error);
+                }
+            );
+    } else {
+        FieldTypeModel.create(data)
+            .then(
+                function onSuccess() {
+                    d.resolve(true);
+                },
+                function onError(error) {
+                    d.reject(error);
+                }
+            );
+    }
 
     return d.promise;
 };
@@ -65,16 +76,14 @@ var createFieldType = function createFieldType(data) {
 var checkIfFieldTypeAlreadyExists = function checkIfFieldTypeAlreadyExists(fieldtype) {
     var d = Q.defer();
 
-    FieldTypeModel.find({uuid: fieldtype.uuid})
-        .lean()
-        .exec(
-            function onSuccess(err, response) {
-                console.log(response);
-                if(response && response.length) {
-                    d.resolve(null);
-                } else {
-                    d.resolve(fieldtype);
+    FieldTypeModel.findOne({key: fieldtype.key})
+        .exec()
+        .then(
+            function onSuccess(response) {
+                if(response) {
+                    fieldtype.uuid = response.uuid;
                 }
+                d.resolve(fieldtype);
             },
             function onError(err) {
                 d.reject(err);

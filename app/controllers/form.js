@@ -97,58 +97,13 @@ var getExternal = function(req, res, next) {
 };
 module.exports.getExternal = getExternal;
 
-var mockResponses = {
-    'data': [
-        {
-            'id': 'ab0c6889-578c-46d2-372b-08d3a73b73ed',
-            'content': {
-                'name': 'Valcke',
-                'firstName': 'Jeroen',
-                'address': {
-                    'street': 'Mariakerksesteenweg',
-                    'nr': 91,
-                    'postalCode': 9031,
-                    'city': 'Drongen',
-                    'test': {
-                        'la': 'lala'
-                    }
-                }
-
-            },
-            'templateLookupKey': 'b9fe9b16-5bd5-4224-a209-051ff4b30bb1',
-            'templateVersion': '7ECD5AF20AA262FDD8A59DA1BAABDE57',
-            'creation': '2016-07-08T16:23:37.312514+02:00'
-        },
-        {
-            'id': 'ab0c6889-578c-46d2-372b-08d3a73b73ed',
-            'content': {
-                'name': 'Valcke',
-                'firstName': 'Jeroen',
-                'address': {
-                    'street': 'Mariakerksesteenweg',
-                    'nr': 91,
-                    'postalCode': 9031,
-                    'city': 'Drongen'
-                }
-
-            },
-            'templateLookupKey': 'b9fe9b16-5bd5-4224-a209-051ff4b30bb1',
-            'templateVersion': '7ECD5AF20AA262FDD8A59DA1BAABDE57',
-            'creation': '2016-07-08T16:23:37.312514+02:00'
-        }
-    ],
-    'self': '/api/responses/ab0c6889-578c-46d2-372b-08d3a73b73ed',
-    'generation': {
-        'timeStamp': '2016-07-08T16:25:04.2647019+02:00',
-        'duration': 741
-    },
-    'feedback': null
-};
-
 var getResponses = function getResponses(req, res, next) {
-    // TODO: Get all repsonses from a template
-
-    res.status(200).json(mockResponses);
+    formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
+        .then(function onSuccess(responseData) {
+            res.status(200).json(responseData);
+        }, function onError(responseError) {
+            res.status(500).json({err: responseError});
+        });
 };
 module.exports.getResponses = getResponses;
 
@@ -188,7 +143,7 @@ var generateResponsesFile = function generateResponsesFile(req, res, next) {
                         v.content = JSON.parse(v.content);
                     } catch (ex) {}
                 }
-                
+
                 return v.content;
             });
         }

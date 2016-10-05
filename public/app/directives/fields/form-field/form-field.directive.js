@@ -31,8 +31,9 @@ angular.module('forms_0.0.2.directives')
                 link: function($scope, element, attr) {
                     $scope.settings = {
                         qlabel: 'meta.label',
-                        track: 'uuid',
+                        track: null,
                         options: [],
+                        id: 'uuid',
                         placeholder: 'Select a form'
                     };
 
