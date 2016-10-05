@@ -13,7 +13,7 @@ var getAllTemplates = function getAllTemplates() {
         .then(function(variables) {
 
             request.get({
-                url: url.resolve(variables.domain, '/acpaas/form-survey-template/v' + variables.version + '/api/Templates'),
+                url: url.resolve(variables.domain, '/acpaas/form-survey-template/v' + variables.templateVersion + '/api/Templates'),
                 qs: {
                     'apikey': variables.apiKey,
                     'pagesize': 100,
@@ -66,7 +66,7 @@ var getResponses = function getResponses(lookupKey, version) {
         .then(function(variables) {
 
             request.get({
-                url: url.resolve(variables.domain, '/acpaas/form-survey-response/v' + variables.version + '/api/Responses/' + lookupKey + '/' + version),
+                url: url.resolve(variables.domain, '/acpaas/form-survey-response/v' + variables.responseVersion + '/api/Responses/' + lookupKey + '/' + version),
                 qs: {
                     'apikey': variables.apiKey
                 },

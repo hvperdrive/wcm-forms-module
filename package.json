@@ -50,9 +50,16 @@
                     "type": "text"
                 },
                 {
-                    "label": "API version",
-                    "description": "The version of the AcPaaS Form & Survey Engine",
-                    "key": "version",
+                    "label": "Template API version",
+                    "description": "The version of the AcPaaS Form & Survey Template Engine",
+                    "key": "templateVersion",
+                    "value": 1,
+                    "type": "number"
+                },
+                {
+                    "label": "Response API version",
+                    "description": "The version of the AcPaaS Form & Survey Response Engine",
+                    "key": "responseVersion",
                     "value": 1,
                     "type": "number"
                 }
