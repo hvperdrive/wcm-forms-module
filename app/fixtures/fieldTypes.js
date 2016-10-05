@@ -3,27 +3,36 @@
 // Set default envs
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 process.env.APP = process.env.APP || 'default';
-// Set envs to lowercase
-process.env.NODE_ENV = process.env.NODE_ENV.toLowerCase();
-process.env.APP = process.env.APP.toLowerCase();
 
 require('rootpath')();
 var Q = require('q');
 var _ = require('lodash');
 var mongoose = require('mongoose');
-var config = require('config')();
+// var config = require('config')();
+
+// Get mongo url parameter
+var argvIndex = _.findIndex(process.argv, function(val) {
+    return val.indexOf('mongodb://') !== -1;
+});
+
+if(argvIndex < 0 || argvIndex >= process.argv.length) {
+    console.log('No mongo path specified. Please use --mongo [mongoPath]');
+    return process.exit(1);
+}
+
+var mongoUrl = process.argv[argvIndex];
 
 // Start mongoose connection
-mongoose.connect(config.server.mongo.url + '/' + config.server.mongo.db);
+mongoose.connect(mongoUrl);
 
 var FieldTypeModel = require('app/models/fieldType');
 
 // jscs:disable maximumLineLength
 var fieldTypes = {
     formFieldType: {
-        key: 'form',
+        key: 'form-select',
         label: 'Form',
-        type: 'Form',
+        type: 'form-select',
         dataType: 'array',
         isQueryable: false,
         isTranslate: false,

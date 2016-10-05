@@ -1,12 +1,13 @@
 'use strict';
 
-angular.module('forms_0.0.1')
+angular.module('forms_0.0.2.controllers')
     .controller('formsDetailController', [
         '$scope',
         '$rootScope',
         '$controller',
         '$templateCache',
         '$filter',
+        '$window',
         'uuid4',
 
         // Services
@@ -20,10 +21,10 @@ angular.module('forms_0.0.1')
         'InstanceData',
         'ExternalForms',
 
-        function($scope, $rootScope, $controller, $templateCache, $filter, uuid4, LabelService, configuration, consumersFactory, InstanceData, ExternalForms) {
+        function($scope, $rootScope, $controller, $templateCache, $filter, $window, uuid4, LabelService, configuration, formsFactory, InstanceData, ExternalForms) {
 
             // Referencing the required factory
-            $scope._factory = consumersFactory;
+            $scope._factory = formsFactory;
 
             // Extend the default resource controller
             angular.extend(this, $controller('ResourceController', {$scope: $scope, InstanceData: InstanceData, Languages: []}));
@@ -33,50 +34,34 @@ angular.module('forms_0.0.1')
             // Get server path for asset.
             $scope.serverPath = configuration.serverPath;
 
-            $scope.publishedOptions = [{
-                key: 'published',
-                label: LabelService.getString('Published')
-            }];
+            $scope.form = null;
+            $scope.options = ExternalForms.data;
+            $scope.exportModel = null;
 
-            $scope.data = {
-                externalForms: ExternalForms.data
+            if($scope.itemData && $scope.itemData.data && $scope.itemData.data.formReference && $scope.itemData.data.formReference.lookupKey) {
+                $scope.form = _.find(ExternalForms.data, {lookupKey: $scope.itemData.data.formReference.lookupKey});
+            }
+
+            $scope.generateResponseFile = function generateResponseFile(type, model) {
+                if(!model || !model.version) {
+                    return false;
+                }
+                var baseURl = configuration.serverPath + configuration.apiPrefix + configuration.apiLevel;
+                var path = 'forms/export/';
+                var params = model.lookupKey + '/' + model.version;
+                var query = '?format=' + type || 'json';
+
+                $window.open(baseURl + path + params + query, '_blank');
             };
-
-            //
-            // HIDE/SHOW
-            //
-
-            //
-            // NEW FIELD
-            //
-
-            //
-            // EDIT FIELD
-            //
-
-            //
-            // SAVE FIELD
-            //
-
-            //
-            // DELETE FIELD
-            //
 
             //
             // OPTIONS
             //
 
-            //
-            // SUBMIT FORM
-            //
-
-            //
-            // CUSTOM VALIDATIONS
-            //
-
-            //
-            // CUSTOM FILTERS
-            //
+            $scope.publishedOptions = [{
+                key: 'published',
+                label: LabelService.getString('Published')
+            }];
 
             // $scope events
             $scope.$on('$destroy', function() {

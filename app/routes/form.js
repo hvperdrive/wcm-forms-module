@@ -22,6 +22,10 @@ module.exports = function(app, hooks) {
     app.route(baseUrl).get(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.read);
     // Get all external forms from the form & survey engine
     app.route(baseUrl + '/external').get(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.getExternal);
+    // Get all external forms from the form & survey engine
+    app.route(baseUrl + '/responses').get(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.getResponses);
+    // Get all external forms from the form & survey engine
+    app.route(baseUrl + '/export/:lookupKey/:version').get(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.generateResponsesFile);
     // Get one form by uuid
     app.route(baseUrl + '/:uuid').get(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.readOne);
 

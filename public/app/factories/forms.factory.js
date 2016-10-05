@@ -1,4 +1,4 @@
-angular.module('forms_0.0.1.factories')
+angular.module('forms_0.0.2.factories')
     .factory('formsFactory', [
 
         '$resource',
@@ -21,6 +21,19 @@ angular.module('forms_0.0.1.factories')
                     method: 'GET',
                     params: {
                         listController: 'external'
+                    }
+                },
+                getResponses: {
+                    method: 'GET',
+                    params:{
+                        listController: 'responses'
+                    }
+                },
+                generateResponseFile: {
+                    method: 'GET',
+                    params: {
+                        listController: 'export',
+                        format: 'json'
                     }
                 }
             });

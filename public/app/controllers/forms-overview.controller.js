@@ -1,4 +1,4 @@
-angular.module('forms_0.0.1')
+angular.module('forms_0.0.2.controllers')
     .controller('formsOverviewController', [
 
         '$scope',

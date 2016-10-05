@@ -1,9 +1,13 @@
 'use strict';
 
 require('rootpath')();
+var _ = require('lodash');
 var Q = require('q');
 var FormModel = require('../models/form');
+var Export = require('../helpers/export');
 var ERROR_TYPES = require('app/middleware/errorInterceptor').ERROR_TYPES;
+var formEngineHelper = require('../helpers/formEngine');
+
 /**
  * @api {GET} /api/1.0.0/forms/ Get all forms.
  * @apiGroup Forms
@@ -80,25 +84,157 @@ module.exports.readOne = readOne;
 var getExternal = function(req, res, next) {
     // TODO: Get all forms from the form & survey engine here and return a modified version of it.
 
-    // Temp: return mocked Data
-    res.status(200).json({
-        'data': [{
-            'name': 'Gezinssamenstelling',
-            'description': 'Gezinssamenstelling formulier',
-            'lookupKey': 'e13d2485-7eed-475b-8032-fc490953e4f0',
-            'version': 'BB3CF8326E2A925AF7576B4FB9742367',
-            'content': '{\'info\': {\'title\': \'Gezinssamenstelling\',\'body\': \'In het uittreksel gezinssamenstelling staat hoeveel personener officieel in uw gezin leven.\',},\'name\': \'UittrekselGezinssamenstelling\',\'formId\': \'\',\'canSaveDraft\' : true,\'saveOnNavigate\': false,\'rendererVersion\': \'1\',\'steps\': [],\'sections\': [],\'fields\': [],\'validators\': [{\'name\': \'myOwnReusableValidator\',\'type\': \'regexp\',\'options\': {\'pattern\': \'/^[1-9]|[1-9][0-9]+$/\'},\'errorMessage\': \'Gelieve enkel cijfers te gebruiken\'}]}',
-            'creation': '2016-07-08T16:11:49.872207+02:00'
-        }],
-        'self': '/api/templates/e13d2485-7eed-475b-8032-fc490953e4f0/BB3CF8326E2A925AF7576B4FB9742367',
-        'generation': {
-            'timeStamp': '2016-07-08T16:14:05.7480173+02:00',
-            'duration': 719
-        },
-        'feedback': null
-    });
+    formEngineHelper.getAllTemplates()
+        .then(function onSuccess(templates) {
+            templates.data = formEngineHelper.parseTemplateVersions(templates.data);
+            return res.status(200).json(templates);
+        }, function onError(err) {
+            return res.status(500).json({
+                msg: 'Could not get form templates from the form engine',
+                err: err
+            });
+        });
 };
 module.exports.getExternal = getExternal;
+
+var mockResponses = {
+    'data': [
+        {
+            'id': 'ab0c6889-578c-46d2-372b-08d3a73b73ed',
+            'content': {
+                'name': 'Valcke',
+                'firstName': 'Jeroen',
+                'address': {
+                    'street': 'Mariakerksesteenweg',
+                    'nr': 91,
+                    'postalCode': 9031,
+                    'city': 'Drongen',
+                    'test': {
+                        'la': 'lala'
+                    }
+                }
+
+            },
+            'templateLookupKey': 'b9fe9b16-5bd5-4224-a209-051ff4b30bb1',
+            'templateVersion': '7ECD5AF20AA262FDD8A59DA1BAABDE57',
+            'creation': '2016-07-08T16:23:37.312514+02:00'
+        },
+        {
+            'id': 'ab0c6889-578c-46d2-372b-08d3a73b73ed',
+            'content': {
+                'name': 'Valcke',
+                'firstName': 'Jeroen',
+                'address': {
+                    'street': 'Mariakerksesteenweg',
+                    'nr': 91,
+                    'postalCode': 9031,
+                    'city': 'Drongen'
+                }
+
+            },
+            'templateLookupKey': 'b9fe9b16-5bd5-4224-a209-051ff4b30bb1',
+            'templateVersion': '7ECD5AF20AA262FDD8A59DA1BAABDE57',
+            'creation': '2016-07-08T16:23:37.312514+02:00'
+        }
+    ],
+    'self': '/api/responses/ab0c6889-578c-46d2-372b-08d3a73b73ed',
+    'generation': {
+        'timeStamp': '2016-07-08T16:25:04.2647019+02:00',
+        'duration': 741
+    },
+    'feedback': null
+};
+
+var getResponses = function getResponses(req, res, next) {
+    // TODO: Get all repsonses from a template
+
+    res.status(200).json(mockResponses);
+};
+module.exports.getResponses = getResponses;
+
+var generateResponsesFile = function generateResponsesFile(req, res, next) {
+    if(!req.params.lookupKey) {
+        return res.status(412).json({
+            msg: 'No lookupKey specified'
+        });
+    }
+
+    if (!req.params.version) {
+        return res.status(412).json({
+            msg: 'No version specified'
+        });
+    }
+
+    var data = [];
+
+    var flatten = function flatten(obj, result, prefix) {
+        _.forEach(obj, function(v, k) {
+            if(typeof v === 'string') {
+                result[(prefix || '') + k] = v;
+            } else if(typeof v === 'object' || Array.isArray(v)) {
+                prefix += (k || 'parent') + '.';
+                flatten(v, result, prefix);
+            }
+        });
+
+        return result;
+    };
+
+    var mapResponse = function mapResponse(type, data) {
+        if(type === 'json') {
+            return _.map(data.data, function(v, k) {
+                if(typeof v.content === 'string'){
+                    try {
+                        v.content = JSON.parse(v.content);
+                    } catch (ex) {}
+                }
+                
+                return v.content;
+            });
+        }
+        return _.map(data.data, function(v, k) {
+            try {
+                v.content = JSON.parse(v.content);
+            } catch (ex) {}
+
+            return flatten(v.content, {}, '');
+        });
+    };
+
+    formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
+        .then(function onSuccess(responseData) {
+
+            switch (req.query.format) {
+                case 'xls':
+                    data = mapResponse(req.query.format, responseData);
+                    // Tell the browser to download this
+                    res.setHeader('Content-disposition', 'attachment; filename=responses.xls');
+                    res.setHeader('Content-type','application/vnd.ms-excel');
+
+                    return res.end(Export.xls(data), 'binary');
+                case 'csv':
+                    data = mapResponse(req.query.format,responseData);
+                    // Tell the browser to download this
+                    res.setHeader('Content-disposition', 'attachment; filename=responses.csv');
+                    res.setHeader('Content-type','text/csv');
+
+                    return res.send(Export.csv(data));
+                default:
+                    data = mapResponse(req.query.format, responseData);
+                    // Tell the browser to download this
+                    res.setHeader('Content-disposition', 'attachment; filename=responses.json');
+                    res.setHeader('Content-type','application/json');
+
+                    return res.send({data: data});
+
+            }
+        }, function onError(responseError) {
+            return res.status(500).json({err: responseError});
+        });
+
+
+};
+module.exports.generateResponsesFile = generateResponsesFile;
 
 /**
  * @api {PUT} /api/1.0.0/forms/:uuid/ Update a form.

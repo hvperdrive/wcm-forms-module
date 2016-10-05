@@ -1,6 +1,6 @@
 {
     "name": "forms",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Form extension",
     "main": "index.js",
     "scripts": {
@@ -27,6 +27,36 @@
         },
         "backend": {
             "dirPath": "app/",
+            "variables": [
+                {
+                    "label": "Form engine tenant key",
+                    "description": "The tenant key of the AcPaaS Form & Survey Engine",
+                    "key": "tenantKey",
+                    "value": "FD70C5EE665507FC0D7EF20B9B22547A",
+                    "type": "text"
+                },
+                {
+                    "label": "API key",
+                    "description": "The API key for F5",
+                    "key": "apiKey",
+                    "value": "42d52b0e-2846-4b06-829c-3cfa36f92620",
+                    "type": "text"
+                },
+                {
+                    "label": "API Domain",
+                    "description": "The domain of the AcPaaS Form & Survey Engine (eg. \"https://api-gw-a.antwerpen.be\")",
+                    "key": "domain",
+                    "value": "https://api-gw-a.antwerpen.be/",
+                    "type": "text"
+                },
+                {
+                    "label": "API version",
+                    "description": "The version of the AcPaaS Form & Survey Engine",
+                    "key": "version",
+                    "value": 1,
+                    "type": "number"
+                }
+            ],
             "routeDirPaths": [
                 "app/routes/"
             ]
@@ -34,9 +64,12 @@
     },
     "author": "Jeroen Valcke",
     "license": "ISC",
-    "dependencies": {},
+    "dependencies": {
+        "excel-export": "^0.5.1"
+    },
     "devDependencies": {
         "gulp": "^3.9.1",
+        "gulp-angular-templatecache": "^2.0.0",
         "gulp-clean": "^0.3.2",
         "gulp-replace": "^0.5.4",
         "gulp-zip": "^3.2.0",

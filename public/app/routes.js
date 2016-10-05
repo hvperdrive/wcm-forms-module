@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('forms_0.0.1')
+angular.module('forms_0.0.2')
     .config([
 
         '$stateProvider',
@@ -8,7 +8,7 @@ angular.module('forms_0.0.1')
 
         function($stateProvider, formsConfigProvider) {
 
-            var moduleFolder = 'app/modules/' + formsConfigProvider.API.name + '_' + formsConfigProvider.API.version + '/';
+            var moduleFolder = formsConfigProvider.API.modulePath;
 
             $stateProvider
 
