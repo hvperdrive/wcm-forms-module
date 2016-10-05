@@ -34,7 +34,7 @@ module.exports = function(app, hooks) {
     // Update a form
     app.route(baseUrl + '/:uuid').put(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.update);
     // Delete a form
-    app.route(baseUrl).delete(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.delete);
+    app.route(baseUrl + '/:uuid').delete(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.delete);
 
     hooks.onLoadComplete = function() {
         console.log('onLoadComplete');
