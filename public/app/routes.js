@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('forms_0.0.2')
+angular.module('forms_0.0.3')
     .config([
 
         '$stateProvider',

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('forms_0.0.2.directives')
+angular.module('forms_0.0.3.directives')
     .directive('formField', [
 
         'formsConfig',

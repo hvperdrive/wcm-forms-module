@@ -1,12 +1,12 @@
 'use strict';
 
-angular.module('forms_0.0.2')
+angular.module('forms_0.0.3')
     .provider('formsConfig', [
         function formsConfig() {
 
             this.API = {
                 name: 'forms',
-                version: '0.0.2',
+                version: '0.0.3',
                 basePath: 'app/modules/'
             };
 
