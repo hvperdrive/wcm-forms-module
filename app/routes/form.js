@@ -45,6 +45,8 @@ module.exports = function(app, hooks) {
     };
 
     hooks.onRemoved = function() {
+        delete require.cache[require.resolve('../controllers/form')];
+        delete require.cache[require.resolve('../helpers/requestHooks')];
         console.log('onRemoved');
     };
 

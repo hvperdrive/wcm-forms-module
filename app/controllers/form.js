@@ -13,7 +13,27 @@ var formEngineHelper = require('../helpers/formEngine');
  * @apiGroup Forms
  * @apiVersion 1.0.0
  *
- * @apiSuccess (200) {Object[]} Consumers200All Success
+ * @apiSuccess (200) {Object[]} Forms200All Success
+ * @apiSuccess (200) {String} Forms200All._id Mongo _id
+ * @apiSuccess (200) {String} Forms200All._v Current version
+ * @apiSuccess (200) {String} Forms200All.uuid Form uuid
+ * @apiSuccess (200) {Object} Forms200All.data Data
+ * @apiSuccess (200) {Object} Forms200All.data.formReference Reference to form engine form
+ * @apiSuccess (200) {String} Forms200All.data.formReference.name Form name
+ * @apiSuccess (200) {String} Forms200All.data.formReference.description Description of the form (from form engine)
+ * @apiSuccess (200) {String} Forms200All.data.formReference.lookupKey Key in the form engine
+ * @apiSuccess (200) {String} Forms200All.data.formReference.version Version in the form engine
+ * @apiSuccess (200) {String} Forms200All.data.formReference.content Content in JSON string format
+ * @apiSuccess (200) {String} Forms200All.data.formReference.creation Creation date in form engine
+ * @apiSuccess (200) {Object} Forms200All.meta Metadata
+ * @apiSuccess (200) {Date} Forms200All.meta.created Created at
+ * @apiSuccess (200) {Boolean} Forms200All.meta.deleted Deleted
+ * @apiSuccess (200) {Boolean} Forms200All.meta.published Published
+ * @apiSuccess (200) {Date} Forms200All.meta.lastModified Last modified at
+ * @apiSuccess (200) {String} Forms200All.meta.lastEditor Last edited by
+ * @apiSuccess (200) {String} Forms200All.meta.label Label in CMS
+ * @apiSuccess (200) {String} Forms200All.meta.description Description in CMS
+ * @apiSuccess (200) {Object[]} Forms200All.versions Versions
  *
  * @apiError (400) {Object} Error Bad request
  */
@@ -38,10 +58,30 @@ module.exports.read = read;
 /**
  * @api {GET} /api/1.0.0/forms/:uuid/ Get a single form.
  * @apiGroup Forms
- * @apiParam {String} uuid Consumer uuid
+ * @apiParam {String} uuid Form uuid
  * @apiVersion 1.0.0
  *
- * @apiSuccess (200) {Object} Consumers200Single Success
+ * @apiSuccess (200) {Object} Forms200Single Success
+ * @apiSuccess (200) {String} Forms200Single._id Mongo _id
+ * @apiSuccess (200) {String} Forms200Single._v Current version
+ * @apiSuccess (200) {String} Forms200Single.uuid Form uuid
+ * @apiSuccess (200) {Object} Forms200Single.data Data
+ * @apiSuccess (200) {Object} Forms200Single.data.formReference Reference to form engine form
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.name Form name
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.description Description of the form (from form engine)
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.lookupKey Key in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.version Version in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.content Content in JSON string format
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.creation Creation date in form engine
+ * @apiSuccess (200) {Object} Forms200Single.meta Metadata
+ * @apiSuccess (200) {Date} Forms200Single.meta.created Created at
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.deleted Deleted
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.published Published
+ * @apiSuccess (200) {Date} Forms200Single.meta.lastModified Last modified at
+ * @apiSuccess (200) {String} Forms200Single.meta.lastEditor Last edited by
+ * @apiSuccess (200) {String} Forms200Single.meta.label Label in CMS
+ * @apiSuccess (200) {String} Forms200Single.meta.description Description in CMS
+ * @apiSuccess (200) {Object[]} Forms200Single.versions Versions
  *
  * @apiError (400) {Object} Error Bad request
  */
@@ -77,7 +117,17 @@ module.exports.readOne = readOne;
  * @apiGroup Forms
  * @apiVersion 1.0.0
  *
- * @apiSuccess (200) {Object} Consumers200Single Success
+ * @apiSuccess (200) {Object} Forms200Single Success
+ * @apiSuccess (200) {Object[]} Forms200Single.data Data
+ * @apiSuccess (200) {String} Forms200Single.data.name Form name
+ * @apiSuccess (200) {String} Forms200Single.data.lookupKey Key in the form engine
+ * @apiSuccess (200) {Object} Forms200Single.data.data Reference to form engine form
+ * @apiSuccess (200) {String} Forms200Single.data.data.name Form name
+ * @apiSuccess (200) {String} Forms200Single.data.data.description Description of the form
+ * @apiSuccess (200) {String} Forms200Single.data.data.lookupKey Key in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.data.version Version in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.data.content Content in JSON string format
+ * @apiSuccess (200) {String} Forms200Single.data.data.creation Creation date in form engine
  *
  * @apiError (400) {Object} Error Bad request
  */
@@ -195,21 +245,52 @@ module.exports.generateResponsesFile = generateResponsesFile;
  * @api {PUT} /api/1.0.0/forms/:uuid/ Update a form.
  * @apiGroup Forms
  * @apiParam {String} uuid Form uuid
+ *
+ * @apiParam (body) {Object} FormsPUTBody Success
+ * @apiParam (body) {String} FormsPUTBody._id Mongo _id
+ * @apiParam (body) {String} FormsPUTBody._v Current version
+ * @apiParam (body) {String} FormsPUTBody.uuid Form uuid
+ * @apiParam (body) {Object} FormsPUTBody.data Data
+ * @apiParam (body) {Object} FormsPUTBody.data.formReference Reference to form engine form
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.name Form name
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.description Description of the form (from form engine)
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.lookupKey Key in the form engine
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.version Version in the form engine
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.content Content in JSON string format
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.creation Creation date in form engine
+ * @apiParam (body) {Object} FormsPUTBody.meta Metadata
+ * @apiParam (body) {Date} FormsPUTBody.meta.created Created at
+ * @apiParam (body) {Boolean} FormsPUTBody.meta.deleted Deleted
+ * @apiParam (body) {Boolean} FormsPUTBody.meta.published Published
+ * @apiParam (body) {Date} FormsPUTBody.meta.lastModified Last modified at
+ * @apiParam (body) {String} FormsPUTBody.meta.lastEditor Last edited by
+ * @apiParam (body) {String} FormsPUTBody.meta.label Label in CMS
+ * @apiParam (body) {String} FormsPUTBody.meta.description Description in CMS
+ * @apiParam (body) {Object[]} FormsPUTBody.versions Versions
+ *
  * @apiVersion 1.0.0
  *
- * @apiSuccess (200) {Object} Consumers200Update Success
- * @apiSuccess (200) {String} Consumers200Update._id Mongo _id
- * @apiSuccess (200) {String} Consumers200Update.uuid Field type uuid
- * @apiSuccess (200) {Object} Consumers200Update.data Data
- * @apiSuccess (200) {Object} Consumers200Update.data.link Link
- * @apiSuccess (200) {String} Consumers200Update.data.link.description Description
- * @apiSuccess (200) {String} Consumers200Update.data.link.url URL
- * @apiSuccess (200) {Object} Consumers200Update.meta Metadata
- * @apiSuccess (200) {Date} Consumers200Update.meta.created Created at
- * @apiSuccess (200) {Boolean} Consumers200Update.meta.deleted Deleted
- * @apiSuccess (200) {Date} Consumers200Update.meta.lastModified Last modified at
- * @apiSuccess (200) {String} Consumers200Update.meta.lastEditor Last edited by
- * @apiSuccess (200) {Object[]} Consumers200Update.versions Versions
+ * @apiSuccess (200) {Object} Forms200Single Success
+ * @apiSuccess (200) {String} Forms200Single._id Mongo _id
+ * @apiSuccess (200) {String} Forms200Single._v Current version
+ * @apiSuccess (200) {String} Forms200Single.uuid Form uuid
+ * @apiSuccess (200) {Object} Forms200Single.data Data
+ * @apiSuccess (200) {Object} Forms200Single.data.formReference Reference to form engine form
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.name Form name
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.description Description of the form (from form engine)
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.lookupKey Key in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.version Version in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.content Content in JSON string format
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.creation Creation date in form engine
+ * @apiSuccess (200) {Object} Forms200Single.meta Metadata
+ * @apiSuccess (200) {Date} Forms200Single.meta.created Created at
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.deleted Deleted
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.published Published
+ * @apiSuccess (200) {Date} Forms200Single.meta.lastModified Last modified at
+ * @apiSuccess (200) {String} Forms200Single.meta.lastEditor Last edited by
+ * @apiSuccess (200) {String} Forms200Single.meta.label Label in CMS
+ * @apiSuccess (200) {String} Forms200Single.meta.description Description in CMS
+ * @apiSuccess (200) {Object[]} Forms200Single.versions Versions
  *
  * @apiError (400) {Object} Error Bad request
  */
@@ -247,21 +328,52 @@ exports.update = function(req, res, next) {
 /**
  * @api {POST} /api/1.0.0/forms/ Add a new form.
  * @apiGroup Forms
+ *
+ * @apiParam (body) {Object} FormsPUTBody Success
+ * @apiParam (body) {String} FormsPUTBody._id Mongo _id
+ * @apiParam (body) {String} FormsPUTBody._v Current version
+ * @apiParam (body) {String} FormsPUTBody.uuid Form uuid
+ * @apiParam (body) {Object} FormsPUTBody.data Data
+ * @apiParam (body) {Object} FormsPUTBody.data.formReference Reference to form engine form
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.name Form name
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.description Description of the form (from form engine)
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.lookupKey Key in the form engine
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.version Version in the form engine
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.content Content in JSON string format
+ * @apiParam (body) {String} FormsPUTBody.data.formReference.creation Creation date in form engine
+ * @apiParam (body) {Object} FormsPUTBody.meta Metadata
+ * @apiParam (body) {Date} FormsPUTBody.meta.created Created at
+ * @apiParam (body) {Boolean} FormsPUTBody.meta.deleted Deleted
+ * @apiParam (body) {Boolean} FormsPUTBody.meta.published Published
+ * @apiParam (body) {Date} FormsPUTBody.meta.lastModified Last modified at
+ * @apiParam (body) {String} FormsPUTBody.meta.lastEditor Last edited by
+ * @apiParam (body) {String} FormsPUTBody.meta.label Label in CMS
+ * @apiParam (body) {String} FormsPUTBody.meta.description Description in CMS
+ * @apiParam (body) {Object[]} FormsPUTBody.versions Versions
+ *
  * @apiVersion 1.0.0
  *
- * @apiSuccess (200) {Object} Consumers200Add Success
- * @apiSuccess (200) {String} Consumers200Add._id Mongo _id
- * @apiSuccess (200) {String} Consumers200Add.uuid Field type uuid
- * @apiSuccess (200) {Object} Consumers200Add.data Data
- * @apiSuccess (200) {Object} Consumers200Add.data.link Link
- * @apiSuccess (200) {String} Consumers200Add.data.link.description Description
- * @apiSuccess (200) {String} Consumers200Add.data.link.url URL
- * @apiSuccess (200) {Object} Consumers200Add.meta Metadata
- * @apiSuccess (200) {Date} Consumers200Add.meta.created Created at
- * @apiSuccess (200) {Boolean} Consumers200Add.meta.deleted Deleted
- * @apiSuccess (200) {Date} Consumers200Add.meta.lastModified Last modified at
- * @apiSuccess (200) {String} Consumers200Add.meta.lastEditor Last edited by
- * @apiSuccess (200) {Object[]} Consumers200Add.versions Versions
+ * @apiSuccess (200) {Object} Forms200Single Success
+ * @apiSuccess (200) {String} Forms200Single._id Mongo _id
+ * @apiSuccess (200) {String} Forms200Single._v Current version
+ * @apiSuccess (200) {String} Forms200Single.uuid Form uuid
+ * @apiSuccess (200) {Object} Forms200Single.data Data
+ * @apiSuccess (200) {Object} Forms200Single.data.formReference Reference to form engine form
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.name Form name
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.description Description of the form (from form engine)
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.lookupKey Key in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.version Version in the form engine
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.content Content in JSON string format
+ * @apiSuccess (200) {String} Forms200Single.data.formReference.creation Creation date in form engine
+ * @apiSuccess (200) {Object} Forms200Single.meta Metadata
+ * @apiSuccess (200) {Date} Forms200Single.meta.created Created at
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.deleted Deleted
+ * @apiSuccess (200) {Boolean} Forms200Single.meta.published Published
+ * @apiSuccess (200) {Date} Forms200Single.meta.lastModified Last modified at
+ * @apiSuccess (200) {String} Forms200Single.meta.lastEditor Last edited by
+ * @apiSuccess (200) {String} Forms200Single.meta.label Label in CMS
+ * @apiSuccess (200) {String} Forms200Single.meta.description Description in CMS
+ * @apiSuccess (200) {Object[]} Forms200Single.versions Versions
  *
  * @apiError (400) {Object} Error Bad request
  */
@@ -290,7 +402,7 @@ exports.create = function(req, res, next) {
  * @apiParam {String} uuid Form uuid
  * @apiVersion 1.0.0
  *
- * @apiSuccess (204) Consumers204Delete No content
+ * @apiSuccess (204) Forms204Delete No content
  *
  * @apiError (400) {Object} Error Bad request
  */

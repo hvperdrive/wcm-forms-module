@@ -4,8 +4,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 process.env.APP = process.env.APP || 'default';
 
-console.log('hello');
-
 require('rootpath')();
 var Q = require('q');
 var _ = require('lodash');
