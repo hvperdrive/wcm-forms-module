@@ -3,11 +3,22 @@
 var gulp = require('gulp');
 var zip = require('gulp-zip');
 var clean = require('gulp-clean');
+var apidocSwagger = require('gulp-apidoc-swagger');
 var runSequence = require('run-sequence');
 var angularTemplatecache = require('gulp-angular-templatecache');
 var replace = require('gulp-replace');
 var fs = require('fs');
 var packageConfig = JSON.parse(fs.readFileSync('./package.json'));
+
+// Generate swagger documentation
+gulp.task('swagger', function() {
+    apidocSwagger.exec({
+        src: 'app/controllers/', // To get limited frontend data replace with  'swagger/input''
+        dest: 'swagger/output',
+        definitions: 'swagger/definitions/definitions.json',
+        // debug: true
+    });
+});
 
 // Copy all the necessary files into a temp folder
 gulp.task('prepareBuild', function() {
