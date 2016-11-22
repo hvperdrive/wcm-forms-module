@@ -18,6 +18,10 @@ gulp.task('swagger', function() {
         definitions: 'swagger/definitions/definitions.json',
         // debug: true
     });
+
+    return gulp.src(['./swagger/output/swagger.json'])
+        .pipe(replace(/\/api\/1.0.0\//g, '/'))
+        .pipe(gulp.dest('./swagger/output/acpaas'));
 });
 
 // Copy all the necessary files into a temp folder
