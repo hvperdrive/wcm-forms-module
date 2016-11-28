@@ -76,10 +76,13 @@
         "excel-export": "^0.5.1"
     },
     "devDependencies": {
+        "apidoc-swagger": "git+https://github.com/JvJefke/apidoc-swagger.git",
         "gulp": "^3.9.1",
         "gulp-angular-templatecache": "^2.0.0",
         "gulp-clean": "^0.3.2",
         "gulp-replace": "^0.5.4",
+        "gulp-apidoc": "^0.2.0",
+        "gulp-apidoc-swagger": "^0.2.2",
         "gulp-zip": "^3.2.0",
         "run-sequence": "^1.2.2"
     }
