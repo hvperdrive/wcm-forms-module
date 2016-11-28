@@ -1,4 +1,4 @@
-angular.module('forms_0.0.3.factories')
+angular.module('forms_0.1.0.factories')
     .factory('formsFactory', [
 
         '$resource',
