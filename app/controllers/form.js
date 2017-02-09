@@ -400,6 +400,7 @@ exports.create = function(req, res, next) {
 /**
  * @api {DELETE} /api/1.0.0/forms/:uuid/ Delete a form
  * @apiParam {String} uuid Form uuid
+ * @apiGroup Forms
  * @apiVersion 1.0.0
  *
  * @apiSuccess (204) Forms204Delete No content

@@ -36,33 +36,8 @@ module.exports = function(app, hooks) {
     // Delete a form
     app.route(baseUrl + '/:uuid').delete(ProfileSecurity, MethodSecurity.read, PermissionsSecurity, formsController.delete);
 
-    hooks.onLoadComplete = function() {
-        console.log('onLoadComplete');
-    };
-
-    hooks.beforeRemove = function() {
-        console.log('beforeRemove');
-    };
-
     hooks.onRemoved = function() {
         delete require.cache[require.resolve('../controllers/form')];
         delete require.cache[require.resolve('../helpers/requestHooks')];
-        console.log('onRemoved');
-    };
-
-    hooks.beforeEnable = function() {
-        console.log('beforeEnable');
-    };
-
-    hooks.onEnabled = function() {
-        console.log('onEnabled');
-    };
-
-    hooks.beforeDisable = function() {
-        console.log('beforeDisable');
-    };
-
-    hooks.onDisabled = function() {
-        console.log('onDisabled');
     };
 };
