@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('forms_0.0.3')
+angular.module('forms_0.1.0')
     .provider('fieldGenerator', [
 
         '$provide',

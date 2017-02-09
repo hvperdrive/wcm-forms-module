@@ -1,18 +1,18 @@
 'use strict';
 
-angular.module('forms_0.0.3.directives', []);
-angular.module('forms_0.0.3.factories', []);
-angular.module('forms_0.0.3.services', ['forms_0.0.3.factories']);
-angular.module('forms_0.0.3.controllers', ['forms_0.0.3.services']);
+angular.module('forms_0.1.0.directives', []);
+angular.module('forms_0.1.0.factories', []);
+angular.module('forms_0.1.0.services', ['forms_0.1.0.factories']);
+angular.module('forms_0.1.0.controllers', ['forms_0.1.0.services']);
 
-angular.module('forms_0.0.3', [
+angular.module('forms_0.1.0', [
 
     'pelorus.services',
 
-    'forms_0.0.3.directives',
-    'forms_0.0.3.factories',
-    'forms_0.0.3.services',
-    'forms_0.0.3.controllers'
+    'forms_0.1.0.directives',
+    'forms_0.1.0.factories',
+    'forms_0.1.0.services',
+    'forms_0.1.0.controllers'
 
     ])
     .run([function() {
