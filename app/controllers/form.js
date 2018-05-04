@@ -1,12 +1,14 @@
-'use strict';
+"use strict";
 
-require('rootpath')();
-var _ = require('lodash');
-var Q = require('q');
-var FormModel = require('../models/form');
-var Export = require('../helpers/export');
-var ERROR_TYPES = require('app/middleware/errorInterceptor').ERROR_TYPES;
-var formEngineHelper = require('../helpers/formEngine');
+require("rootpath")();
+
+var _ = require("lodash");
+var Q = require("q");
+
+var FormModel = require("../models/form");
+var Export = require("../helpers/export");
+var ERROR_TYPES = require("app/middleware/errorInterceptor").ERROR_TYPES;
+var formEngineHelper = require("../helpers/formEngine");
 
 /**
  * @api {GET} /api/1.0.0/forms/ Get all forms.
@@ -38,21 +40,22 @@ var formEngineHelper = require('../helpers/formEngine');
  * @apiError (400) {Object} Error Bad request
  */
 var read = function(req, res, next) {
-    FormModel.find({
-            'meta.deleted': false
-        })
-        .populate('meta.lastEditor')
-        .lean()
-        .exec(function(err, items) {
-            if (!err && items) {
-                res.status(200).json(items);
-            } else {
-                res.status(400).json({
-                    err: err
-                });
-            }
-        });
+	FormModel.find({
+		"meta.deleted": false,
+	})
+		.populate("meta.lastEditor")
+		.lean()
+		.exec(function(err, items) {
+			if (!err && items) {
+				res.status(200).json(items);
+			} else {
+				res.status(400).json({
+					err: err,
+				});
+			}
+		});
 };
+
 module.exports.read = read;
 
 /**
@@ -86,30 +89,31 @@ module.exports.read = read;
  * @apiError (400) {Object} Error Bad request
  */
 var readOne = function(req, res, next) {
-    if (!req.params.uuid) {
-        return res.status(412).json({
-            logType: ERROR_TYPES.NO_UUID,
-            err: {
-                msg: 'There is no uuid parameter specified!'
-            }
-        });
-    }
+	if (!req.params.uuid) {
+		return res.status(412).json({
+			logType: ERROR_TYPES.NO_UUID,
+			err: {
+				msg: "There is no uuid parameter specified!",
+			},
+		});
+	}
 
-    FormModel.findOne({
-            uuid: req.params.uuid,
-            'meta.deleted': false
-        })
-        .lean()
-        .exec(function(err, items) {
-            if (!err && items) {
-                res.status(200).json(items);
-            } else {
-                res.status(400).json({
-                    err: err
-                });
-            }
-        });
+	FormModel.findOne({
+		uuid: req.params.uuid,
+		"meta.deleted": false,
+	})
+		.lean()
+		.exec(function(err, items) {
+			if (!err && items) {
+				res.status(200).json(items);
+			} else {
+				res.status(400).json({
+					err: err,
+				});
+			}
+		});
 };
+
 module.exports.readOne = readOne;
 
 /**
@@ -132,113 +136,116 @@ module.exports.readOne = readOne;
  * @apiError (400) {Object} Error Bad request
  */
 var getExternal = function(req, res, next) {
-    // TODO: Get all forms from the form & survey engine here and return a modified version of it.
+	// TODO: Get all forms from the form & survey engine here and return a modified version of it.
 
-    formEngineHelper.getAllTemplates()
-        .then(function onSuccess(templates) {
-            templates.data = formEngineHelper.parseTemplateVersions(templates.data);
-            return res.status(200).json(templates);
-        }, function onError(err) {
-            return res.status(500).json({
-                msg: 'Could not get form templates from the form engine',
-                err: err
-            });
-        });
+	formEngineHelper.getAllTemplates()
+		.then(function onSuccess(templates) {
+			templates.data = formEngineHelper.parseTemplateVersions(templates.data);
+			return res.status(200).json(templates);
+		}, function onError(err) {
+			return res.status(500).json({
+				msg: "Could not get form templates from the form engine",
+				err: err,
+			});
+		});
 };
+
 module.exports.getExternal = getExternal;
 
 var getResponses = function getResponses(req, res, next) {
-    formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
-        .then(function onSuccess(responseData) {
-            res.status(200).json(responseData);
-        }, function onError(responseError) {
-            res.status(500).json({err: responseError});
-        });
+	formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
+		.then(function onSuccess(responseData) {
+			res.status(200).json(responseData);
+		}, function onError(responseError) {
+			res.status(500).json({ err: responseError });
+		});
 };
+
 module.exports.getResponses = getResponses;
 
 var generateResponsesFile = function generateResponsesFile(req, res, next) {
-    if(!req.params.lookupKey) {
-        return res.status(412).json({
-            msg: 'No lookupKey specified'
-        });
-    }
+	if (!req.params.lookupKey) {
+		return res.status(412).json({
+			msg: "No lookupKey specified",
+		});
+	}
 
-    if (!req.params.version) {
-        return res.status(412).json({
-            msg: 'No version specified'
-        });
-    }
+	if (!req.params.version) {
+		return res.status(412).json({
+			msg: "No version specified",
+		});
+	}
 
-    var data = [];
+	var data = [];
 
-    var flatten = function flatten(obj, result, prefix) {
-        _.forEach(obj, function(v, k) {
-            if(typeof v === 'string') {
-                result[(prefix || '') + k] = v;
-            } else if(typeof v === 'object' || Array.isArray(v)) {
-                prefix += (k || 'parent') + '.';
-                flatten(v, result, prefix);
-            }
-        });
+	var flatten = function flatten(obj, result, prefix) {
+		_.forEach(obj, function(v, k) {
+			if (typeof v === "string") {
+				result[(prefix || "") + k] = v;
+			} else if (typeof v === "object" || Array.isArray(v)) {
+				prefix += (k || "parent") + ".";
+				flatten(v, result, prefix);
+			}
+		});
 
-        return result;
-    };
+		return result;
+	};
 
-    var mapResponse = function mapResponse(type, data) {
-        if(type === 'json') {
-            return _.map(data.data, function(v, k) {
-                if(typeof v.content === 'string'){
-                    try {
-                        v.content = JSON.parse(v.content);
-                    } catch (ex) {}
-                }
+	var mapResponse = function mapResponse(type, data) {
+		if (type === "json") {
+			return _.map(data.data, function(v, k) {
+				if (typeof v.content === "string") {
+					try {
+						v.content = JSON.parse(v.content);
+					} catch (ex) { }
+				}
 
-                return v.content;
-            });
-        }
-        return _.map(data.data, function(v, k) {
-            try {
-                v.content = JSON.parse(v.content);
-            } catch (ex) {}
+				return v.content;
+			});
+		}
+		return _.map(data.data, function(v, k) {
+			try {
+				v.content = JSON.parse(v.content);
+			} catch (ex) { }
 
-            return flatten(v.content, {}, '');
-        });
-    };
+			return flatten(v.content, {}, "");
+		});
+	};
 
-    formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
-        .then(function onSuccess(responseData) {
+	formEngineHelper.getResponses(req.params.lookupKey, req.params.version)
+		.then(function onSuccess(responseData) {
 
-            switch (req.query.format) {
-                case 'xls':
-                    data = mapResponse(req.query.format, responseData);
-                    // Tell the browser to download this
-                    res.setHeader('Content-disposition', 'attachment; filename=responses.xls');
-                    res.setHeader('Content-type','application/vnd.ms-excel');
+			switch (req.query.format) {
+				case "xls":
+					data = mapResponse(req.query.format, responseData);
+					// Tell the browser to download this
+					res.setHeader("Content-disposition", "attachment; filename=responses.xls");
+					res.setHeader("Content-type", "application/vnd.ms-excel");
 
-                    return res.end(Export.xls(data), 'binary');
-                case 'csv':
-                    data = mapResponse(req.query.format,responseData);
-                    // Tell the browser to download this
-                    res.setHeader('Content-disposition', 'attachment; filename=responses.csv');
-                    res.setHeader('Content-type','text/csv');
+					return res.end(Export.xls(data), "binary");
+				case "csv":
+					data = mapResponse(req.query.format, responseData);
+					// Tell the browser to download this
+					res.setHeader("Content-disposition", "attachment; filename=responses.csv");
+					res.setHeader("Content-type", "text/csv");
 
-                    return res.send(Export.csv(data));
-                default:
-                    data = mapResponse(req.query.format, responseData);
-                    // Tell the browser to download this
-                    res.setHeader('Content-disposition', 'attachment; filename=responses.json');
-                    res.setHeader('Content-type','application/json');
+					return res.send(Export.csv(data));
+				default:
+					data = mapResponse(req.query.format, responseData);
+					// Tell the browser to download this
+					res.setHeader("Content-disposition", "attachment; filename=responses.json");
+					res.setHeader("Content-type", "application/json");
 
-                    return res.send({data: data});
+					return res.send({ data: data });
 
-            }
-        }, function onError(responseError) {
-            return res.status(500).json({err: responseError});
-        });
+			}
+		}, function onError(responseError) {
+			return res.status(500).json({ err: responseError });
+		});
 
 
 };
+
 module.exports.generateResponsesFile = generateResponsesFile;
 
 /**
@@ -295,34 +302,34 @@ module.exports.generateResponsesFile = generateResponsesFile;
  * @apiError (400) {Object} Error Bad request
  */
 exports.update = function(req, res, next) {
-    if (!req.params.uuid) {
-        return res.status(400).json({
-            logType: ERROR_TYPES.NO_UUID,
-            err: 'There is no uuid parameter specified!'
-        });
-    }
+	if (!req.params.uuid) {
+		return res.status(400).json({
+			logType: ERROR_TYPES.NO_UUID,
+			err: "There is no uuid parameter specified!",
+		});
+	}
 
-    // Find userId to update to meta.lastEditor
-    if (req.session.hasOwnProperty('profile')) {
-        // Replace last editor _id
-        req.body.meta.lastEditor = req.session.profile._id.toString();
-    }
+	// Find userId to update to meta.lastEditor
+	if (req.session.hasOwnProperty("profile")) {
+		// Replace last editor _id
+		req.body.meta.lastEditor = req.session.profile._id.toString();
+	}
 
-    FormModel.findOneAndUpdate({
-            uuid: req.params.uuid
-        }, req.body, {
-            new: true
-        })
-        .then(
-            function onSuccess(response) {
-                res.status(200).json(response);
-            },
-            function onError(responseError) {
-                res.status(400).json({
-                    err: responseError
-                });
-            }
-        );
+	FormModel.findOneAndUpdate({
+		uuid: req.params.uuid,
+	}, req.body, {
+		new: true,
+	})
+		.then(
+		function onSuccess(response) {
+			res.status(200).json(response);
+		},
+		function onError(responseError) {
+			res.status(400).json({
+				err: responseError,
+			});
+		}
+		);
 };
 
 /**
@@ -378,23 +385,23 @@ exports.update = function(req, res, next) {
  * @apiError (400) {Object} Error Bad request
  */
 exports.create = function(req, res, next) {
-    // Find userId to update to meta.lastEditor
-    if (req.session.hasOwnProperty('profile')) {
-        // Replace last editor _id
-        req.body.meta.lastEditor = req.session.profile._id.toString();
-    }
+	// Find userId to update to meta.lastEditor
+	if (req.session.hasOwnProperty("profile")) {
+		// Replace last editor _id
+		req.body.meta.lastEditor = req.session.profile._id.toString();
+	}
 
-    FormModel.create(req.body)
-        .then(
-            function onSuccess(response) {
-                res.status(200).json(response);
-            },
-            function onError(responseError) {
-                res.status(400).json({
-                    err: responseError
-                });
-            }
-        );
+	FormModel.create(req.body)
+		.then(
+		function onSuccess(response) {
+			res.status(200).json(response);
+		},
+		function onError(responseError) {
+			res.status(400).json({
+				err: responseError,
+			});
+		}
+		);
 };
 
 /**
@@ -408,51 +415,51 @@ exports.create = function(req, res, next) {
  * @apiError (400) {Object} Error Bad request
  */
 exports.delete = function(req, res, next) {
-    if (!req.params.uuid) {
-        return res.status(400).json({
-            logType: ERROR_TYPES.NO_UUID,
-            err: 'There is no uuid parameter specified!'
-        });
-    }
+	if (!req.params.uuid) {
+		return res.status(400).json({
+			logType: ERROR_TYPES.NO_UUID,
+			err: "There is no uuid parameter specified!",
+		});
+	}
 
-    var contentId;
+	var contentId;
 
-    // Find the consumer id first, because we don't have the _id here.
-    FormModel.findOne({
-            uuid: req.params.uuid
-        }, {
-            _id: 1
-        })
-        .then(
-            function onSuccess(response) {
-                if (response) {
-                    contentId = response._id;
-                    return Q.when(response._id);
-                } else {
-                    throw 'Content item not found.';
-                }
-            }
-        )
-        .then(
-            function deleteContent() {
-                return FormModel.update({
-                        uuid: req.params.uuid
-                    }, {
-                        $set: {
-                            'meta.deleted': true
-                        }
-                    })
-                    .exec();
-            }
-        )
-        .then(
-            function onSuccess() {
-                res.status(204).send();
-            },
-            function onError(responseError) {
-                res.status(400).json({
-                    err: responseError
-                });
-            }
-        );
+	// Find the consumer id first, because we don't have the _id here.
+	FormModel.findOne({
+		uuid: req.params.uuid,
+	}, {
+		_id: 1,
+	})
+		.then(
+		function onSuccess(response) {
+			if (response) {
+				contentId = response._id;
+				return Q.when(response._id);
+			} else {
+				throw "Content item not found.";
+			}
+		}
+		)
+		.then(
+		function deleteContent() {
+			return FormModel.update({
+				uuid: req.params.uuid,
+			}, {
+				$set: {
+					"meta.deleted": true,
+				},
+			})
+				.exec();
+		}
+		)
+		.then(
+		function onSuccess() {
+			res.status(204).send();
+		},
+		function onError(responseError) {
+			res.status(400).json({
+				err: responseError,
+			});
+		}
+		);
 };

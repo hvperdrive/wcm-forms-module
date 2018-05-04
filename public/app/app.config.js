@@ -1,12 +1,12 @@
-'use strict';
+"use strict";
 
-angular.module('forms_0.1.0')
-    .config([
+angular.module("forms_1.0.0")
+	.config([
 
-        'fieldGeneratorProvider',
+		"fieldGeneratorProvider",
 
-        function(fieldGeneratorProvider) {
-            // Register custom fields (eg. form field);
-            fieldGeneratorProvider.registerCustomFields();
-        }
-    ]);
+		function(fieldGeneratorProvider) {
+			// Register custom fields (eg. form field);
+			fieldGeneratorProvider.registerCustomFields();
+		},
+	]);
