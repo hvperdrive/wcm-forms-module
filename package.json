@@ -1,89 +1,88 @@
 {
-    "name": "forms",
-    "version": "0.1.0",
+    "name": "@wcm/forms",
+    "version": "1.0.0",
     "description": "Form extension",
-    "main": "index.js",
+    "main": "app",
     "scripts": {
         "fixtures": "node ./app/fixtures/fieldTypes.js",
         "migrations": "echo \"Error: no migrations yet\" && exit 0",
         "onRemoval": "node ./app/fixtures/removal.js"
     },
     "keywords": [
-        "test"
+        "WCM",
+        "CMS",
+        "Pelorus",
+        "Modules"
     ],
     "wcmModule": {
-        "frontend": {
-            "dirPath": "public/app/",
-            "assetsDirPath": "public/myAssets/",
-            "moduleConfig": {
-                "translationKey": "Forms",
-                "operationType": "forms",
-                "icon": "tasks",
-                "type": "content",
-                "navigationItem": true,
-                "authentication": {
-                    "requiresLogin": true
-                }
+        "angularDirPath": "public/app/",
+        "assetsDirPath": "public/myAssets/",
+        "moduleConfig": {
+            "angularModule": "forms",
+            "translationKey": "Forms",
+            "operationType": "forms",
+            "icon": "tasks",
+            "type": "content",
+            "navigationItem": true,
+            "authentication": {
+                "requiresLogin": true
             }
         },
-        "backend": {
-            "dirPath": "app/",
-            "variables": [
-                {
-                    "label": "Form engine tenant key",
-                    "description": "The tenant key of the AcPaaS Form & Survey Engine",
-                    "key": "tenantKey",
-                    "value": "FD70C5EE665507FC0D7EF20B9B22547A",
-                    "type": "text"
-                },
-                {
-                    "label": "API key",
-                    "description": "The API key for F5",
-                    "key": "apiKey",
-                    "value": "42d52b0e-2846-4b06-829c-3cfa36f92620",
-                    "type": "text"
-                },
-                {
-                    "label": "API Domain",
-                    "description": "The domain of the AcPaaS Form & Survey Engine (eg. \"https://api-gw-a.antwerpen.be\")",
-                    "key": "domain",
-                    "value": "https://api-gw-a.antwerpen.be/",
-                    "type": "text"
-                },
-                {
-                    "label": "Template API version",
-                    "description": "The version of the AcPaaS Form & Survey Template Engine",
-                    "key": "templateVersion",
-                    "value": 1,
-                    "type": "number"
-                },
-                {
-                    "label": "Response API version",
-                    "description": "The version of the AcPaaS Form & Survey Response Engine",
-                    "key": "responseVersion",
-                    "value": 1,
-                    "type": "number"
-                }
-            ],
-            "routeDirPaths": [
-                "app/routes/"
-            ]
-        }
+        "variables": [
+            {
+                "label": "Form engine tenant key",
+                "description": "The tenant key of the AcPaaS Form & Survey Engine",
+                "key": "tenantKey",
+                "value": "FD70C5EE665507FC0D7EF20B9B22547A",
+                "type": "text"
+            },
+            {
+                "label": "API key",
+                "description": "The API key for F5",
+                "key": "apiKey",
+                "value": "42d52b0e-2846-4b06-829c-3cfa36f92620",
+                "type": "text"
+            },
+            {
+                "label": "API Domain",
+                "description": "The domain of the AcPaaS Form & Survey Engine (eg. \"https://api-gw-a.antwerpen.be\")",
+                "key": "domain",
+                "value": "https://api-gw-a.antwerpen.be/",
+                "type": "text"
+            },
+            {
+                "label": "Template API version",
+                "description": "The version of the AcPaaS Form & Survey Template Engine",
+                "key": "templateVersion",
+                "value": 1,
+                "type": "number"
+            },
+            {
+                "label": "Response API version",
+                "description": "The version of the AcPaaS Form & Survey Response Engine",
+                "key": "responseVersion",
+                "value": 1,
+                "type": "number"
+            }
+        ]
     },
     "author": "Jeroen Valcke",
     "license": "ISC",
     "dependencies": {
-        "excel-export": "^0.5.1"
+        "@wcm/module-helper": "git+git@github.com:hvperdrive/wcm-module-helper.git",
+        "excel-export": "^0.5.1",
+        "lodash": "^4.17.4",
+        "q": "^1.5.1",
+        "request": "^2.83.0",
+        "rootpath": "^0.1.2"
     },
     "devDependencies": {
+        "@district01/eslint-config": "~1.0.0",
         "apidoc-swagger": "git+https://github.com/JvJefke/apidoc-swagger.git",
         "gulp": "^3.9.1",
         "gulp-angular-templatecache": "^2.0.0",
-        "gulp-clean": "^0.3.2",
         "gulp-replace": "^0.5.4",
         "gulp-apidoc": "^0.2.0",
-        "gulp-apidoc-swagger": "^0.2.2",
-        "gulp-zip": "^3.2.0",
-        "run-sequence": "^1.2.2"
+        "gulp-apidoc-swagger": "^0.2.2"
     }
 }

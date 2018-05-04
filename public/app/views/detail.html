@@ -1,125 +1,72 @@
 <div class="content--inner">
 
-    <h1 class="c-page-title"><span translate>Edit</span> <i>{{itemData.data.name}}</i></h1>
+	<h1 class="c-page-title">
+		<span translate>Edit</span>
+		<i>{{itemData.data.name}}</i>
+	</h1>
 
-    <div ng-form name="resourceForms.itemForm">
+	<div ng-form name="resourceForms.itemForm">
 
-        <fieldset class="c-form__fieldset">
-            <legend class="c-form__fieldset__legend" translate>Meta information</legend>
+		<fieldset class="c-form__fieldset">
+			<legend class="c-form__fieldset__legend" translate>Meta information</legend>
 
-            <div class="form-section c-form__fieldset__content u-clear">
-                <field
-                    class="u-width-6-6"
-                    label="'Administration name' | translate"
-                    secondary-label="'The reference name in the WCM' | translate"
-                    name="formLabel"
-                    type="'text'"
-                    model="itemData.meta.label"
-                    field-data="resourceForms.metaForm"
-                    required="true"
-                    readonly="!_newInstance"
-                    placeholder="'Administration name' | translate">
-                </field>
+			<div class="form-section c-form__fieldset__content u-clear">
+				<field class="u-width-6-6" label="'Administration name' | translate" secondary-label="'The reference name in the WCM' | translate"
+				 name="formLabel" type="'text'" model="itemData.meta.label" field-data="resourceForms.metaForm" required="true" readonly="!_newInstance"
+				 placeholder="'Administration name' | translate">
+				</field>
 
-                <field
-                    label="'Description' | translate"
-                    class="u-width-6-6 fl"
-                    name="formDescription"
-                    type="'textarea'"
-                    model="itemData.meta.description"
-                    field-data="resourceForms.metaForm"
-                    required="true"
-                    placeholder="'Description' | translate">
-                </field>
+				<field label="'Description' | translate" class="u-width-6-6 fl" name="formDescription" type="'textarea'" model="itemData.meta.description"
+				 field-data="resourceForms.metaForm" required="true" placeholder="'Description' | translate">
+				</field>
 
-                <!-- Todo: rename checkbox to checkboxlist since it's a list -->
-                <field
-                    class="u-width-6-6 fl published-checkbox"
-                    name="gepubliceerd"
-                    type="'checkbox'"
-                    model="itemData.meta"
-                    options="publishedOptions">
-                </field>
+				<!-- Todo: rename checkbox to checkboxlist since it's a list -->
+				<field class="u-width-6-6 fl published-checkbox" name="gepubliceerd" type="'checkbox'" model="itemData.meta" options="publishedOptions">
+				</field>
 
-                <field
-                    class="u-width-6-6"
-                    label="'Administration email' | translate"
-                    secondary-label="'The reference name in the WCM' | translate"
-                    name="formLabel"
-                    type="'form-field'"
-                    model="itemData.meta.label"
-                    field-data="resourceForms.metaForm"
-                    required="true"
-                    readonly="!_newInstance"
-                    placeholder="'Administration name' | translate">
-                </field>
-            </div>
+				<field class="u-width-6-6" label="'Administration email' | translate" secondary-label="'The reference name in the WCM' | translate"
+				 name="formLabel" type="'form-field'" model="itemData.meta.label" field-data="resourceForms.metaForm" required="true"
+				 readonly="!_newInstance" placeholder="'Administration name' | translate">
+				</field>
+			</div>
 
-        </fieldset>
+		</fieldset>
 
-        <fieldset class="c-form__fieldset">
-            <legend class="c-form__fieldset__legend" translate>Form</legend>
+		<fieldset class="c-form__fieldset">
+			<legend class="c-form__fieldset__legend" translate>Form</legend>
 
-            <div class="form-section c-form__fieldset__content u-clear">
-                <field
-                    label="'Form' | translate"
-                    class="u-width-3-6 fl"
-                    name="form"
-                    type="'select'"
-                    qlabel="name"
-                    model="form"
-                    options="options"
-                    track="lookupKey"
-                    field-data="resourceForms.itemForm"
-                    required="true"
-                    placeholder="'Select a form' | translate">
-                </field>
+			<div class="form-section c-form__fieldset__content u-clear">
+				<field label="'Form' | translate" class="u-width-3-6 fl" name="form" type="'select'" qlabel="name" model="form" options="options"
+				 track="lookupKey" field-data="resourceForms.itemForm" required="true" placeholder="'Select a form' | translate">
+				</field>
 
-                <field
-                    label="'Version' | translate"
-                    class="u-width-3-6 fl"
-                    name="form_version"
-                    type="'select'"
-                    qlabel="version | limitTo: 4 : 0"
-                    model="itemData.data.formReference"
-                    options="form.data"
-                    track="version"
-                    field-data="resourceForms.itemForm"
-                    required="true"
-                    placeholder="'Select a version' | translate">
-                </field>
-            </div>
+				<field label="'Version' | translate" class="u-width-3-6 fl" name="form_version" type="'select'" qlabel="version | limitTo: 4 : 0"
+				 model="itemData.data.formReference" options="form.data" track="version" field-data="resourceForms.itemForm" required="true"
+				 placeholder="'Select a version' | translate">
+				</field>
+			</div>
 
-        </fieldset>
+		</fieldset>
 
-        <fieldset class="c-form__fieldset">
-            <legend class="c-form__fieldset__legend" translate>Export</legend>
-            <div class="form-section c-form__fieldset__content u-clear">
+		<fieldset class="c-form__fieldset">
+			<legend class="c-form__fieldset__legend" translate>Export</legend>
+			<div class="form-section c-form__fieldset__content u-clear">
 
-                <div class="u-clear">
-                    <field
-                        label="'Version' | translate"
-                        class="u-width-3-6 fl"
-                        name="form_version_select"
-                        type="'select'"
-                        qlabel="version | limitTo: 4 : 0"
-                        model="exportModel"
-                        options="form.data"
-                        track="version"
-                        field-data="resourceForms.exportForm"
-                        placeholder="'Select a version' | translate"
-                        secondary-label="'Choose a version to export' | translate">
-                    </field>
-                </div>
-                <div class="u-clear" ng-if="exportModel">
-                    <button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('csv', exportModel)" translate>Export as CSV</button>
-                    <button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('xls', exportModel)" translate>Export as Excel</button>
-                    <button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('json', exportModel)" translate>Export as JSON</button>
-                </div>
-            </div>
+				<div class="u-clear">
+					<field label="'Version' | translate" class="u-width-3-6 fl" name="form_version_select" type="'select'" qlabel="version | limitTo: 4 : 0"
+					 model="exportModel" options="form.data" track="version" field-data="resourceForms.exportForm" placeholder="'Select a version' | translate"
+					 secondary-label="'Choose a version to export' | translate">
+					</field>
+				</div>
+				<div class="u-clear" ng-if="exportModel">
+					<button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('csv', exportModel)" translate>Export as CSV</button>
+					<button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('xls', exportModel)" translate>Export as Excel</button>
+					<button class="c-button c-button--sm c-button--alpha" ng-click="generateResponseFile('json', exportModel)" translate>Export as JSON</button>
+				</div>
+			</div>
 
-        </fieldset>
+		</fieldset>
 
-    </div>
+	</div>
 
 </div>
